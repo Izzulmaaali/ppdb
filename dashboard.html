@@ -1,20 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Siswa</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #5c6bc0, #7986cb);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      padding: 30px 20px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .animate-text {
+      font-size: 20px;
+      font-weight: bold;
+      animation: fadeIn 2s ease-in-out infinite alternate;
+    }
+
+    h3 {
+      margin-top: 15px;
+      font-weight: normal;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #fff;
+      color: #3f51b5;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #e8eaf6;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+      .animate-text {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 15px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-  <div class="animate-text">Selamat datang peserta didik baru MTs Maslakul Huda Sluke</div>
-  <h3>Silahkan isi nama kalian, kemudian lanjutkan login untuk mengisi nilai</h3>
-  <button onclick="lanjut()">Lanjut Isi Nilai</button>
-</div>
-<script>
-if (!sessionStorage.getItem("siswa")) location.href = "index.html";
-function lanjut() {
-  location.href = "form_nilai.html";
-}
-</script>
+  <div class="container">
+    <div class="animate-text">Selamat datang peserta didik baru MTs Maslakul Huda Sluke</div>
+    <h3>Silahkan isi nama kalian, kemudian lanjutkan login untuk mengisi nilai</h3>
+    <button onclick="lanjut()">Lanjut Isi Nilai</button>
+  </div>
+
+  <script>
+    if (!sessionStorage.getItem("siswa")) location.href = "index.html";
+    function lanjut() {
+      location.href = "form_nilai.html";
+    }
+  </script>
 </body>
 </html>
