@@ -2,18 +2,47 @@
 <html>
 <head>
   <title>Dashboard Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+    }
     .container {
       max-width: 1000px;
       margin: auto;
       padding: 20px;
-      font-family: sans-serif;
+    }
+    h2 {
+      text-align: center;
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #388e3c;
+    }
+    .table-container {
+      overflow-x: auto;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      min-width: 800px;
     }
     th, td {
       padding: 8px;
@@ -23,13 +52,23 @@
     th {
       background-color: #f0f0f0;
     }
-    button {
-      margin: 10px 5px;
-      padding: 10px 15px;
-    }
     img {
       cursor: pointer;
       border: 1px solid #ccc;
+      max-width: 50px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      table {
+        font-size: 14px;
+      }
+      button {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -37,21 +76,23 @@
 <div class="container">
   <h2>Dashboard Admin</h2>
 
-  <div style="margin-bottom: 10px;">
+  <div class="button-group">
     <button onclick="exportExcel()">📅 Export Excel</button>
     <button onclick="window.print()">🖨️ Cetak Daftar</button>
     <button onclick="logout()">Logout</button>
   </div>
 
-  <table id="tabelSiswa">
-    <thead>
-      <tr>
-        <th>No</th><th>Nama</th><th>Asal</th><th>Matematika</th><th>Indonesia</th>
-        <th>IPA</th><th>Peringkat</th><th>Rata-rata</th><th>Kelas</th><th>SKL</th><th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="table-container">
+    <table id="tabelSiswa">
+      <thead>
+        <tr>
+          <th>No</th><th>Nama</th><th>Asal</th><th>Matematika</th><th>Indonesia</th>
+          <th>IPA</th><th>Peringkat</th><th>Kejuaraan</th><th>Rata-rata</th><th>Kelas</th><th>SKL</th><th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 </div>
 
 <script>
@@ -81,9 +122,10 @@
           <td contenteditable onblur="updateData(${i}, 'indo', this.textContent)">${siswa.indo}</td>
           <td contenteditable onblur="updateData(${i}, 'ipa', this.textContent)">${siswa.ipa}</td>
           <td contenteditable onblur="updateData(${i}, 'peringkat', this.textContent)">${siswa.peringkat}</td>
+          <td contenteditable onblur="updateData(${i}, 'kejuaraan', this.textContent)">${siswa.kejuaraan}</td>
           <td>${parseFloat(siswa.rata).toFixed(2)}</td>
           <td>${siswa.kelas}</td>
-          <td><img src="${siswa.skl}" width="50" onclick="showImg('${siswa.skl}')"></td>
+          <td><img src="${siswa.skl}" alt="Preview SKL" onclick="showImg('${siswa.skl}')"></td>
           <td><button onclick="hapus(${i})">Hapus</button></td>
         </tr>`;
     });
@@ -92,7 +134,7 @@
   function updateData(index, field, value) {
     const data = ambilData();
     if (!value) return alert("Nilai tidak boleh kosong.");
-    data[index][field] = (field === 'nama' || field === 'asal') ? value : parseFloat(value);
+    data[index][field] = (field === 'nama' || field === 'asal' || field === 'kejuaraan') ? value : parseFloat(value);
 
     const { mtk, indo, ipa } = data[index];
     const rata = ((+mtk + +indo + +ipa) / 3).toFixed(2);
@@ -121,13 +163,13 @@
     let html = `
       <table border='1'>
         <tr><th>No</th><th>Nama</th><th>Asal</th><th>Matematika</th><th>Indonesia</th>
-        <th>IPA</th><th>Peringkat</th><th>Rata-rata</th><th>Kelas</th></tr>
+        <th>IPA</th><th>Peringkat</th><th>Kejuaraan</th><th>Rata-rata</th><th>Kelas</th></tr>
     `;
     data.forEach((s, i) => {
       html += `
         <tr>
           <td>${i + 1}</td><td>${s.nama}</td><td>${s.asal}</td><td>${s.mtk}</td>
-          <td>${s.indo}</td><td>${s.ipa}</td><td>${s.peringkat}</td>
+          <td>${s.indo}</td><td>${s.ipa}</td><td>${s.peringkat}</td><td>${s.kejuaraan}</td>
           <td>${parseFloat(s.rata).toFixed(2)}</td><td>${s.kelas}</td>
         </tr>`;
     });
