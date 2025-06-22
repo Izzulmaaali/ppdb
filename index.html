@@ -1,49 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>ppdb MTs maslakul huda sluke</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PPDB MTs Maslakul Huda Sluke</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #5c6bc0, #7986cb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
     .container {
+      background: white;
+      padding: 30px 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 100%;
       text-align: center;
-      margin-top: 80px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     }
+
     .container img {
-      width: 100px;
-      margin-bottom: 3px;
+      width: 90px;
+      margin-bottom: 10px;
     }
+
+    h2 {
+      margin: 5px 0;
+      color: #3f51b5;
+    }
+
+    h3, h4 {
+      margin: 5px 0;
+      font-weight: normal;
+    }
+
     input, button {
-      padding: 10px;
-      margin: 5px;
-      width: 250px;
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #3f51b5;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #303f9f;
+    }
+
+    @media (max-width: 480px) {
+      h2 { font-size: 20px; }
+      h3, h4 { font-size: 16px; }
+      input, button { font-size: 15px; }
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <!-- Logo Sekolah -->
-  <img src="./logosekolah.png" alt="Logo Sekolah">
-  <h2>LOGIN</h2>
-  <h3>PENDATAAN NILAI SISWA BARU</h3>
-  <h4>MTs Maslakul Huda Sluke</h4>
-  <input type="text" id="nama" placeholder="Nama Lengkap atau Username">
-  <input type="password" id="pass" placeholder="Kosongkan jika siswa baru">
-  <button onclick="login()">Login</button>
-</div>
-<script>
-function login() {
-  const nama = document.getElementById("nama").value.toLowerCase();
-  const pass = document.getElementById("pass").value;
-  if (nama === "admin" && pass === "admin123") {
-    sessionStorage.setItem("admin", "true");
-    location.href = "admin.html";
-  } else if (nama) {
-    sessionStorage.setItem("siswa", nama);
-    location.href = "dashboard.html";
-  } else {
-    alert("Nama tidak boleh kosong");
-  }
-}
-</script>
+  <div class="container">
+    <img src="./logosekolah.png" alt="Logo Sekolah">
+    <h2>LOGIN</h2>
+    <h3>PENDATAAN NILAI SISWA BARU</h3>
+    <h4>MTs Maslakul Huda Sluke</h4>
+
+    <input type="text" id="nama" placeholder="Nama Lengkap atau Username" required>
+    <input type="password" id="pass" placeholder="Kosongkan jika siswa baru">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <script>
+    function login() {
+      const nama = document.getElementById("nama").value.toLowerCase().trim();
+      const pass = document.getElementById("pass").value;
+
+      if (nama === "admin" && pass === "admin123") {
+        sessionStorage.setItem("admin", "true");
+        location.href = "admin.html";
+      } else if (nama) {
+        sessionStorage.setItem("siswa", nama);
+        location.href = "dashboard.html";
+      } else {
+        alert("Nama tidak boleh kosong");
+      }
+    }
+  </script>
 </body>
 </html>
