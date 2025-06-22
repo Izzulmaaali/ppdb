@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kartu Bukti Pendaftaran</title>
+  <style>
+    #kartu {
+      border: 1px solid #000;
+      padding: 30px;
+      max-width: 700px;
+      margin: 30px auto;
+      background: #fff;
+      font-family: sans-serif;
+    }
+    .kop {
+      text-align: center;
+      border-bottom: 2px solid #000;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+    }
+    .kop h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .data {
+      line-height: 2;
+      font-size: 18px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    table, th, td {
+      border: 1px solid #000;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+    .unduh-btn {
+      margin-top: 30px;
+      text-align: center;
+    }
+    @media print {
+      .unduh-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="kartu">
+    <div class="kop">
+      <h2>YAYASAN PENDIDIKAN DAN KESEJAHTERAAN SOSIAL</h2>
+      <h3>MTS MASLAKUL HUDA SLUKE</h3>
+      <p>Jl. PT. Argawastu Sunan Langgar KM 01 Kec. Sluke, Kab. Rembang, Jawa Tengah</p>
+    </div>
+
+    <div class="data">
+      <p><strong>Nama:</strong> <span id="nama"></span></p>
+      <p><strong>Asal Sekolah:</strong> <span id="asal"></span></p>
+      <p><strong>Diterima di Kelas:</strong> <span id="kelas"></span></p>
+
+      <h3>Nilai Siswa</h3>
+      <table>
+        <tr>
+          <th>Matematika</th>
+          <th>Bahasa Indonesia</th>
+          <th>IPA</th>
+          <th>Peringkat Kelas</th>
+        </tr>
+        <tr>
+          <td id="mtk"></td>
+          <td id="indo"></td>
+          <td id="ipa"></td>
+          <td id="peringkat"></td>
+        </tr>
+        <tr>
+          <td colspan="3" style="text-align:right;"><strong>Rata-rata</strong></td>
+          <td><span id="rata"></span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="unduh-btn">
+      <button onclick="window.print()">Unduh Kartu</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("nama").textContent = sessionStorage.getItem("siswa");
+    document.getElementById("asal").textContent = sessionStorage.getItem("asal");
+    document.getElementById("kelas").textContent = sessionStorage.getItem("kelas");
+    document.getElementById("rata").textContent = sessionStorage.getItem("rata");
+
+    document.getElementById("mtk").textContent = sessionStorage.getItem("mtk");
+    document.getElementById("indo").textContent = sessionStorage.getItem("indo");
+    document.getElementById("ipa").textContent = sessionStorage.getItem("ipa");
+    document.getElementById("peringkat").textContent = sessionStorage.getItem("peringkat");
+  </script>
+</body>
+</html>

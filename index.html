@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ppdb MTs maslakul huda sluke</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .container {
+      text-align: center;
+      margin-top: 80px;
+    }
+    .container img {
+      width: 100px;
+      margin-bottom: 3px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      width: 250px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- Logo Sekolah -->
+  <img src="./logosekolah.png" alt="Logo Sekolah">
+  <h2>LOGIN</h2>
+  <h3>PENDATAAN NILAI SISWA BARU</h3>
+  <h4>MTs Maslakul Huda Sluke</h4>
+  <input type="text" id="nama" placeholder="Nama Lengkap atau Username">
+  <input type="password" id="pass" placeholder="Kosongkan jika siswa baru">
+  <button onclick="login()">Login</button>
+</div>
+<script>
+function login() {
+  const nama = document.getElementById("nama").value.toLowerCase();
+  const pass = document.getElementById("pass").value;
+  if (nama === "admin" && pass === "admin123") {
+    sessionStorage.setItem("admin", "true");
+    location.href = "admin.html";
+  } else if (nama) {
+    sessionStorage.setItem("siswa", nama);
+    location.href = "dashboard.html";
+  } else {
+    alert("Nama tidak boleh kosong");
+  }
+}
+</script>
+</body>
+</html>

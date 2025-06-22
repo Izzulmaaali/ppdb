@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+      font-family: sans-serif;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 8px;
+      border: 1px solid #333;
+      text-align: center;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    button {
+      margin: 10px 5px;
+      padding: 10px 15px;
+    }
+    img {
+      cursor: pointer;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Dashboard Admin</h2>
+
+  <div style="margin-bottom: 10px;">
+    <button onclick="exportExcel()">📅 Export Excel</button>
+    <button onclick="window.print()">🖨️ Cetak Daftar</button>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <table id="tabelSiswa">
+    <thead>
+      <tr>
+        <th>No</th><th>Nama</th><th>Asal</th><th>Matematika</th><th>Indonesia</th>
+        <th>IPA</th><th>Peringkat</th><th>Rata-rata</th><th>Kelas</th><th>SKL</th><th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+  if (sessionStorage.getItem('admin') !== 'true') location.href = 'index.html';
+
+  function ambilData() {
+    return JSON.parse(localStorage.getItem("ppdb") || "[]");
+  }
+
+  function simpanData(data) {
+    localStorage.setItem("ppdb", JSON.stringify(data));
+    tampilkanData();
+  }
+
+  function tampilkanData() {
+    const data = ambilData();
+    const tbody = document.querySelector("tbody");
+    tbody.innerHTML = "";
+
+    data.forEach((siswa, i) => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${i + 1}</td>
+          <td contenteditable onblur="updateData(${i}, 'nama', this.textContent)">${siswa.nama}</td>
+          <td contenteditable onblur="updateData(${i}, 'asal', this.textContent)">${siswa.asal}</td>
+          <td contenteditable onblur="updateData(${i}, 'mtk', this.textContent)">${siswa.mtk}</td>
+          <td contenteditable onblur="updateData(${i}, 'indo', this.textContent)">${siswa.indo}</td>
+          <td contenteditable onblur="updateData(${i}, 'ipa', this.textContent)">${siswa.ipa}</td>
+          <td contenteditable onblur="updateData(${i}, 'peringkat', this.textContent)">${siswa.peringkat}</td>
+          <td>${parseFloat(siswa.rata).toFixed(2)}</td>
+          <td>${siswa.kelas}</td>
+          <td><img src="${siswa.skl}" width="50" onclick="showImg('${siswa.skl}')"></td>
+          <td><button onclick="hapus(${i})">Hapus</button></td>
+        </tr>`;
+    });
+  }
+
+  function updateData(index, field, value) {
+    const data = ambilData();
+    if (!value) return alert("Nilai tidak boleh kosong.");
+    data[index][field] = (field === 'nama' || field === 'asal') ? value : parseFloat(value);
+
+    const { mtk, indo, ipa } = data[index];
+    const rata = ((+mtk + +indo + +ipa) / 3).toFixed(2);
+    data[index].rata = rata;
+
+    let kelas = "Tidak Lolos";
+    if (rata >= 90) kelas = "7A";
+    else if (rata >= 80) kelas = "7B";
+    else if (rata >= 70) kelas = "7C";
+    else if (rata >= 60) kelas = "7D";
+    data[index].kelas = kelas;
+
+    simpanData(data);
+  }
+
+  function hapus(index) {
+    if (confirm("Yakin ingin menghapus data ini?")) {
+      const data = ambilData();
+      data.splice(index, 1);
+      simpanData(data);
+    }
+  }
+
+  function exportExcel() {
+    const data = ambilData();
+    let html = `
+      <table border='1'>
+        <tr><th>No</th><th>Nama</th><th>Asal</th><th>Matematika</th><th>Indonesia</th>
+        <th>IPA</th><th>Peringkat</th><th>Rata-rata</th><th>Kelas</th></tr>
+    `;
+    data.forEach((s, i) => {
+      html += `
+        <tr>
+          <td>${i + 1}</td><td>${s.nama}</td><td>${s.asal}</td><td>${s.mtk}</td>
+          <td>${s.indo}</td><td>${s.ipa}</td><td>${s.peringkat}</td>
+          <td>${parseFloat(s.rata).toFixed(2)}</td><td>${s.kelas}</td>
+        </tr>`;
+    });
+    html += `</table>`;
+
+    const blob = new Blob([html], { type: "application/vnd.ms-excel" });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = "data_siswa.xls";
+    link.click();
+  }
+
+  function showImg(url) {
+    const win = window.open();
+    win.document.write(`<img src="${url}" style="max-width:100%">`);
+  }
+
+  function logout() {
+    sessionStorage.removeItem("admin");
+    location.href = "index.html";
+  }
+
+  tampilkanData();
+</script>
+</body>
+</html>

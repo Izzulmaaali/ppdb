@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Nilai</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .preview {
+      width: 100px;
+      margin-top: 10px;
+      display: block;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Form Pengisian Nilai</h2>
+  <form id="form" onsubmit="simpan(event)">
+    <input type="text" id="nama" disabled><br>
+    <input type="text" id="asal" placeholder="Asal Sekolah" required>
+    <input type="number" id="mtk" placeholder="Nilai Matematika" required>
+    <input type="number" id="indo" placeholder="Nilai Bahasa Indonesia" required>
+    <input type="number" id="ipa" placeholder="Nilai IPA" required>
+    <input type="number" id="peringkat" placeholder="Peringkat Kelas" required>
+    
+    <label>Upload SKL:</label>
+    <input type="file" accept="image/*" onchange="preview(this)">
+    <img id="preview" class="preview" src="#"><br>
+
+    <button type="submit">Simpan</button>
+  </form>
+</div>
+
+<script>
+  document.getElementById("nama").value = sessionStorage.getItem("siswa") || "";
+  let sklData = "";
+
+  function preview(input) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById("preview").src = e.target.result;
+    sklData = e.target.result; // <== ini penting!
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+  function simpan(e) {
+    e.preventDefault();
+    if (!confirm("Anda yakin ingin menyimpan data tersebut?")) return;
+
+    const nama = sessionStorage.getItem("siswa");
+    const asal = document.getElementById("asal").value;
+    const mtk = +document.getElementById("mtk").value;
+    const indo = +document.getElementById("indo").value;
+    const ipa = +document.getElementById("ipa").value;
+    const peringkat = +document.getElementById("peringkat").value;
+    const rata = ((mtk + indo + ipa) / 3).toFixed(2);
+
+    let kelas = "Tidak Lolos";
+    if (rata >= 90) kelas = "7A";
+    else if (rata >= 80) kelas = "7B";
+    else if (rata >= 70) kelas = "7C";
+    else if (rata >= 60) kelas = "7D";
+
+    const data = JSON.parse(localStorage.getItem("ppdb") || "[]");
+    if (kelas !== "Tidak Lolos" && data.filter(d => d.kelas === kelas).length >= 30) {
+      alert("Kelas " + kelas + " penuh.");
+      return;
+    }
+
+    data.push({ nama, asal, mtk, indo, ipa, peringkat, rata, kelas, skl: sklData });
+    localStorage.setItem("ppdb", JSON.stringify(data));
+
+    sessionStorage.setItem("asal", asal);
+    sessionStorage.setItem("mtk", mtk);
+    sessionStorage.setItem("indo", indo);
+    sessionStorage.setItem("ipa", ipa);
+    sessionStorage.setItem("peringkat", peringkat);
+    sessionStorage.setItem("rata", rata);
+    sessionStorage.setItem("kelas", kelas);
+    sessionStorage.setItem("skl", sklData); // <- simpan ke sessionStorage juga
+
+    alert("Selamat Anda diterima di MTs");
+    location.href = "kartu.html";
+  }
+</script>
+</body>
+</html>
