@@ -1,98 +1,184 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Form Nilai</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .preview {
-      width: 100px;
-      margin-top: 10px;
-      display: block;
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #5c6bc0, #7986cb);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px 10px;
     }
+
     .container {
+      background: #fff;
+      border-radius: 12px;
+      padding: 25px;
       max-width: 500px;
-      margin: auto;
-      padding: 20px;
-    }
-    input, button {
-      display: block;
       width: 100%;
-      margin: 10px 0;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #3f51b5;
+    }
+
+    label {
+      margin-top: 15px;
+      display: block;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    button {
+      width: 100%;
       padding: 10px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    input[type="file"] {
+      border: none;
+    }
+
+    button {
+      background-color: #3f51b5;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #303f9f;
+    }
+
+    .preview {
+      display: block;
+      margin-top: 10px;
+      max-width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 20px;
+      }
+
+      input,
+      button {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <h2>Form Pengisian Nilai</h2>
-  <form id="form" onsubmit="simpan(event)">
-    <input type="text" id="nama" disabled><br>
-    <input type="text" id="asal" placeholder="Asal Sekolah" required>
-    <input type="number" id="mtk" placeholder="Nilai Matematika" required>
-    <input type="number" id="indo" placeholder="Nilai Bahasa Indonesia" required>
-    <input type="number" id="ipa" placeholder="Nilai IPA" required>
-    <input type="number" id="peringkat" placeholder="Peringkat Kelas" required>
-    
-    <label>Upload SKL:</label>
-    <input type="file" accept="image/*" onchange="preview(this)">
-    <img id="preview" class="preview" src="#"><br>
+  <div class="container">
+    <h2>Form Pengisian Nilai</h2>
+    <form id="form" onsubmit="simpan(event)">
+      <label>Nama</label>
+      <input type="text" id="nama" disabled />
 
-    <button type="submit">Simpan</button>
-  </form>
-</div>
+      <label>Asal Sekolah</label>
+      <input type="text" id="asal" placeholder="Contoh: SDN 1 Sluke" required />
 
-<script>
-  document.getElementById("nama").value = sessionStorage.getItem("siswa") || "";
-  let sklData = "";
+      <label>Nilai Matematika</label>
+      <input type="number" id="mtk" placeholder="Contoh: 85" required />
 
-  function preview(input) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    document.getElementById("preview").src = e.target.result;
-    sklData = e.target.result; // <== ini penting!
-  };
-  reader.readAsDataURL(input.files[0]);
-}
+      <label>Nilai Bahasa Indonesia</label>
+      <input type="number" id="indo" placeholder="Contoh: 80" required />
 
-  function simpan(e) {
-    e.preventDefault();
-    if (!confirm("Anda yakin ingin menyimpan data tersebut?")) return;
+      <label>Nilai IPA</label>
+      <input type="number" id="ipa" placeholder="Contoh: 90" required />
 
-    const nama = sessionStorage.getItem("siswa");
-    const asal = document.getElementById("asal").value;
-    const mtk = +document.getElementById("mtk").value;
-    const indo = +document.getElementById("indo").value;
-    const ipa = +document.getElementById("ipa").value;
-    const peringkat = +document.getElementById("peringkat").value;
-    const rata = ((mtk + indo + ipa) / 3).toFixed(2);
+      <label>Peringkat Kelas</label>
+      <input type="number" id="peringkat" placeholder="Contoh: 1" required />
 
-    let kelas = "Tidak Lolos";
-    if (rata >= 90) kelas = "7A";
-    else if (rata >= 80) kelas = "7B";
-    else if (rata >= 70) kelas = "7C";
-    else if (rata >= 60) kelas = "7D";
+      <label>Kejuaraan Lomba</label>
+      <input type="text" id="kejuaraan" placeholder="Contoh: Juara 2 MTQ" required />
 
-    const data = JSON.parse(localStorage.getItem("ppdb") || "[]");
-    if (kelas !== "Tidak Lolos" && data.filter(d => d.kelas === kelas).length >= 30) {
-      alert("Kelas " + kelas + " penuh.");
-      return;
+      <label>Upload SKL (Foto/Scan)</label>
+      <input type="file" accept="image/*" onchange="preview(this)" />
+      <img id="preview" class="preview" src="#" alt="Preview SKL" />
+
+      <button type="submit">Simpan</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("nama").value = sessionStorage.getItem("siswa") || "";
+    let sklData = "";
+
+    function preview(input) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        document.getElementById("preview").src = e.target.result;
+        sklData = e.target.result;
+      };
+      if (input.files[0]) {
+        reader.readAsDataURL(input.files[0]);
+      }
     }
 
-    data.push({ nama, asal, mtk, indo, ipa, peringkat, rata, kelas, skl: sklData });
-    localStorage.setItem("ppdb", JSON.stringify(data));
+    function simpan(e) {
+      e.preventDefault();
+      if (!confirm("Anda yakin ingin menyimpan data tersebut?")) return;
 
-    sessionStorage.setItem("asal", asal);
-    sessionStorage.setItem("mtk", mtk);
-    sessionStorage.setItem("indo", indo);
-    sessionStorage.setItem("ipa", ipa);
-    sessionStorage.setItem("peringkat", peringkat);
-    sessionStorage.setItem("rata", rata);
-    sessionStorage.setItem("kelas", kelas);
-    sessionStorage.setItem("skl", sklData); // <- simpan ke sessionStorage juga
+      const nama = sessionStorage.getItem("siswa");
+      const asal = document.getElementById("asal").value;
+      const mtk = +document.getElementById("mtk").value;
+      const indo = +document.getElementById("indo").value;
+      const ipa = +document.getElementById("ipa").value;
+      const peringkat = +document.getElementById("peringkat").value;
+      const kejuaraan = document.getElementById("kejuaraan").value;
+      const rata = ((mtk + indo + ipa) / 3).toFixed(2);
 
-    alert("Selamat Anda diterima di MTs");
-    location.href = "kartu.html";
-  }
-</script>
+      let kelas = "Tidak Lolos";
+      if (rata >= 90) kelas = "7A";
+      else if (rata >= 80) kelas = "7B";
+      else if (rata >= 70) kelas = "7C";
+      else if (rata >= 60) kelas = "7D";
+
+      const data = JSON.parse(localStorage.getItem("ppdb") || "[]");
+      if (kelas !== "Tidak Lolos" && data.filter(d => d.kelas === kelas).length >= 30) {
+        alert("Kelas " + kelas + " penuh.");
+        return;
+      }
+
+      data.push({ nama, asal, mtk, indo, ipa, peringkat, kejuaraan, rata, kelas, skl: sklData });
+      localStorage.setItem("ppdb", JSON.stringify(data));
+
+      sessionStorage.setItem("asal", asal);
+      sessionStorage.setItem("mtk", mtk);
+      sessionStorage.setItem("indo", indo);
+      sessionStorage.setItem("ipa", ipa);
+      sessionStorage.setItem("peringkat", peringkat);
+      sessionStorage.setItem("kejuaraan", kejuaraan);
+      sessionStorage.setItem("rata", rata);
+      sessionStorage.setItem("kelas", kelas);
+      sessionStorage.setItem("skl", sklData);
+
+      alert("Selamat Anda diterima di MTs");
+      location.href = "kartu.html";
+    }
+  </script>
 </body>
 </html>
